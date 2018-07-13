@@ -79,17 +79,17 @@ def run_tests(sample, label, num_labels):
     ##4. Test layer jacobian w.r.t X ##
     layer_val_x = lambda x: demo_layer.forward_pass(x)
     layer_jacobian_vec_x = lambda x, v: demo_layer.backward_pass(x, v)[-1]  # returns (dL\dX)^T . v
-    #jacobian_test(layer_val_x, layer_jacobian_vec_x, sample, epsilon0=50, num_iter=30, delta=0.1)
+    #jacobian_test(layer_val_x, layer_jacobian_vec_x, sample, epsilon0=0.1, num_iter=30, delta=0.1)
 
     ##5. Test layer jacobian w.r.t W2 ##
     layer_val_w2 = lambda w2: demo_layer.forward_pass(sample,W2=w2)
     layer_jacobian_vec_w2 = lambda w2,v: demo_layer.backward_pass(sample, v,W2=w2)[-2]  # returns (dL\dX)^T . v
-    jacobian_test(layer_val_w2, layer_jacobian_vec_w2,layer_w2, epsilon0=50, num_iter=30, delta=0.1,dim_d=sample.shape)
+    #jacobian_test(layer_val_w2, layer_jacobian_vec_w2,layer_w2, epsilon0=50, num_iter=30, delta=0.1,dim_d=sample.shape)
 
     ##6. Test layer jacobian w.r.t b ##
     layer_val_b = lambda b: demo_layer.forward_pass(sample,b=b)
-    layer_jacobian_vec_b = lambda b, v: demo_layer.backward_pass(sample, v,b=b)[-2]  # returns (dL\dX)^T . v
-    #jacobian_test(layer_val_b, layer_jacobian_vec_b, layer_b, epsilon0=50, num_iter=30, delta=0.1,dim_d=sample.shape)
+    layer_jacobian_vec_b = lambda b, v: demo_layer.backward_pass(sample, v,b=b)[-3]  # returns (dL\dX)^T . v
+    #jacobian_test(layer_val_b, layer_jacobian_vec_b, layer_b, epsilon0=5, num_iter=30, delta=0.1)#,dim_d=sample.shape)
 
     ##7. Test layer jacobian w.r.t w1 ##
     layer_val_w1 = lambda w1: demo_layer.forward_pass(sample,w1=w1)
@@ -131,16 +131,16 @@ def main(tests=False):
        run_tests(sample=v_data[None, 0], label=v_labels[None, 0], num_labels=num_labels)
 
     #print(np.std(t_data, axis=0), np.mean(t_data, axis=0))  # Expect variance = 1, mean = 0
-"""
+
     hyperparams_grid = {
         "max_iter": [50],
         "batch_size": [200],
-        "learning_rate": [0.001],
+        "learning_rate": [0.01],
         "decay_rate": [0.1],
         "convergence_criteria": [0.01],
         "gamma": [0.8],
-        "reg_param": [0.9],
-        "num_layers": [2]
+        "reg_param": [0],
+        "num_layers": [15]
     }
 
     max_acc = 0
@@ -205,7 +205,7 @@ def run_unit(t_data, t_labels, v_data, v_labels, num_labels, **hyperparams):
     plt.show()
 
     return validation_accs[-1]
-"""
+
 
 if __name__ == "__main__":
     main(tests=TEST_MODE)

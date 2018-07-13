@@ -172,7 +172,7 @@ class ResLayer:
         if b is None:
             b = self.b
 
-        return X + W2.dot(sigmoid((W1.dot(X).T + b.T).T))
+        return X + W2.dot(sigmoid(W1.dot(X) + b))
 
     def backward_pass(self, X, v, W1=None, W2=None, b=None):
         """
@@ -190,7 +190,7 @@ class ResLayer:
             W2 = self.W2
         if b is None:
             b = self.b
-        W1_d_x_p_b = np.add(W1.dot(X), b)
+        W1_d_x_p_b = W1.dot(X) + b  # column wise
         sig = sigmoid(W1_d_x_p_b)
         sig_derivative = np.multiply(sig, 1 - sig)
         dy_db = np.multiply(W2, sig_derivative.T)
