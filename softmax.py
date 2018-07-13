@@ -39,7 +39,7 @@ class ResNetwork(LossFunction):
             label = y[None, i]  # labels should be kept as vector
             if calc_value:
                 x_history = self.forward_pass(sample, label)
-                sum_of_losses += x_history[-1]
+                sum_of_losses += x_history[-1] #history[-1] is the loss
 
             if calc_grad_by_params:
                 cur_gradient = self.flatten_and_append(self.backward_pass(label, x_history))
@@ -171,7 +171,9 @@ class ResLayer:
             W2 = self.W2
         if b is None:
             b = self.b
-        return X + self.W2.dot((self.W1.dot(X).T + self.b.T).T)
+        mat = self.W2.dot((self.W1.dot(X).T + self.b.T).T)
+        sigmoid_mat = sigmoid(mat)
+        return X + sigmoid_mat
 
     def backward_pass(self, X, v, W1=None, W2=None, b=None):
         """
@@ -196,6 +198,7 @@ class ResLayer:
         dy_db_t_v = (dy_db).T.dot(v)
         dy_dw2_t_v = v.dot(sig.T)
         dy_dw1_t_v = dy_db_t_v.dot(X.T)
+        #dy_dw1_t_v= dy_db.dot(X.dot(v.T))
         new_v = (np.eye(self.N, self.N) + dy_db.dot(W1)).T.dot(v)
         return dy_dw1_t_v, dy_db_t_v, dy_dw2_t_v, new_v
 
@@ -311,6 +314,19 @@ def accuracy(predictions, labels):
     return (100.0 * np.sum(predictions ==labels)
           / predictions.shape[0])
 
+def ReLU(mat):
+    new_mat = np.zeros_like(mat)
+    for i in range(0,mat.shape[0]):
+        for j in range(0,mat.shape[1]):
+            new_mat[i,j]=np.max(mat[i,j],0)
+    return new_mat
+
+def mat_sigmoid(mat):
+    new_mat = np.zeros_like(mat)
+    for i in range(0,mat.shape[0]):
+        for j in range(0,mat.shape[1]):
+            new_mat[i,j]=sigmoid(mat[i,j])
+    return new_mat
 
 def sigmoid(x):
     return 1/(1+np.exp(-x))
