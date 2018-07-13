@@ -172,7 +172,7 @@ class ResLayer:
         if b is None:
             b = self.b
 
-        return X + self.W2.dot(sigmoid((self.W1.dot(X).T + self.b.T).T))
+        return X + W2.dot(sigmoid((W1.dot(X).T + b.T).T))
 
     def backward_pass(self, X, v, W1=None, W2=None, b=None):
         """
