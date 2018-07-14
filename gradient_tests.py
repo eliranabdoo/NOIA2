@@ -15,7 +15,7 @@ def gradient_test(f, f_gradient, x, epsilon0, num_iter=30, delta=0.1):
     total_err2 = 0
     flag = True
     epsilon = epsilon0
-    grad = f_gradient(x) # grad by x requires trnapose here.... TODO
+    grad = f_gradient(x) # grad by x requires trnapose here....
     prev_value1 = np.linalg.norm(f(x+epsilon*d)-f(x))
     prev_value2 = np.linalg.norm(f(x+epsilon*d)-f(x)-epsilon*np.dot(grad, epsilon*d.T))
     for i in range(0, num_iter):
@@ -44,8 +44,6 @@ def jacobian_test(f, f_jacobianmv, x, epsilon0, num_iter=30, delta=0.1,dim_d=Non
     passed_all_tests = True
     epsilon = epsilon0
     if(dim_d==None):
-        ress1=f(x + epsilon * d)
-        ra22=f(x)
         prev_value1 = np.linalg.norm(f(x + epsilon * d) - f(x))
         prev_value2 = np.linalg.norm(f(x + epsilon * d) - f(x) - f_jacobianmv(x, epsilon * d))
     else:
